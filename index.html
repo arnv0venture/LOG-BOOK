@@ -1270,6 +1270,8 @@ body::after {
     activeTab: 'expenses',
     todayExpenses: [],
     todayIncome: [],
+    displayedExpenses: [],
+    displayedIncome: [],
     filteredExpenses: null,
     filteredIncome: null,
     expMonthData: null,
@@ -1489,13 +1491,16 @@ body::after {
   // ===== DATA SERVICE =====
   async function fetchTodayExpenses() {
     try {
+      const dateVal = $('expenseDate').value || todayStr();
       const { data, error } = await supabase
         .from('expenses')
         .select('*')
-        .eq('entry_date', todayStr())
+        .eq('entry_date', dateVal)
         .order('logged_at', { ascending: false });
       if (error) throw error;
-      state.todayExpenses = data || [];
+      const fetchedData = data || [];
+      if (dateVal === todayStr()) state.todayExpenses = [...fetchedData];
+      state.displayedExpenses = [...fetchedData];
     } catch(e) {
       console.error('Fetch expenses error:', e);
       showToast('Failed to load expenses', 'error');
@@ -1504,13 +1509,16 @@ body::after {
 
   async function fetchTodayIncome() {
     try {
+      const dateVal = $('incomeDate').value || todayStr();
       const { data, error } = await supabase
         .from('income')
         .select('*')
-        .eq('entry_date', todayStr())
+        .eq('entry_date', dateVal)
         .order('logged_at', { ascending: false });
       if (error) throw error;
-      state.todayIncome = data || [];
+      const fetchedData = data || [];
+      if (dateVal === todayStr()) state.todayIncome = [...fetchedData];
+      state.displayedIncome = [...fetchedData];
     } catch(e) {
       console.error('Fetch income error:', e);
       showToast('Failed to load income', 'error');
@@ -1651,11 +1659,13 @@ body::after {
 
   function renderExpenseList() {
     const container = $('expenseListContainer');
-    const data = state.filtersActive.expenses ? (state.filteredExpenses || []) : state.todayExpenses;
+    const data = state.filtersActive.expenses ? (state.filteredExpenses || []) : state.displayedExpenses;
     const total = data.reduce((s, e) => s + Number(e.amount), 0);
 
     $('expenseListTotal').textContent = formatCurrency(total);
-    $('expenseListTitle').textContent = state.filtersActive.expenses ? 'Filtered Expenses' : "Today's Expenses";
+    const dateVal = $('expenseDate').value || todayStr();
+    const titleText = dateVal === todayStr() ? "Today's Expenses" : `Expenses on ${formatDate(dateVal)}`;
+    $('expenseListTitle').textContent = state.filtersActive.expenses ? 'Filtered Expenses' : titleText;
 
     if (data.length === 0) {
       container.innerHTML = renderEmptyState('expenses');
@@ -1666,11 +1676,13 @@ body::after {
 
   function renderIncomeList() {
     const container = $('incomeListContainer');
-    const data = state.filtersActive.income ? (state.filteredIncome || []) : state.todayIncome;
+    const data = state.filtersActive.income ? (state.filteredIncome || []) : state.displayedIncome;
     const total = data.reduce((s, e) => s + Number(e.amount), 0);
 
     $('incomeListTotal').textContent = formatCurrency(total);
-    $('incomeListTitle').textContent = state.filtersActive.income ? 'Filtered Income' : "Today's Income";
+    const dateVal = $('incomeDate').value || todayStr();
+    const titleText = dateVal === todayStr() ? "Today's Income" : `Income on ${formatDate(dateVal)}`;
+    $('incomeListTitle').textContent = state.filtersActive.income ? 'Filtered Income' : titleText;
 
     if (data.length === 0) {
       container.innerHTML = renderEmptyState('income');
@@ -1786,8 +1798,9 @@ body::after {
     // Optimistic update
     if (entryDate === todayStr()) {
       state.todayExpenses.unshift(entry);
-      renderExpenseList();
     }
+    state.displayedExpenses.unshift(entry);
+    renderExpenseList();
     updateHeader();
 
     // Show success animation
@@ -1841,8 +1854,9 @@ body::after {
     // Optimistic update
     if (entryDate === todayStr()) {
       state.todayIncome.unshift(entry);
-      renderIncomeList();
     }
+    state.displayedIncome.unshift(entry);
+    renderIncomeList();
     updateHeader();
 
     const btn = $('btnLogIncome');
@@ -1885,8 +1899,10 @@ body::after {
     }
 
     // Optimistic remove
-    const removed = state[list].find(e => e.id === id);
+    const dispList = type === 'expenses' ? 'displayedExpenses' : 'displayedIncome';
+    const removed = state[list].find(e => e.id === id) || state[dispList].find(e => e.id === id);
     state[list] = state[list].filter(e => e.id !== id);
+    state[dispList] = state[dispList].filter(e => e.id !== id);
 
     // Also remove from filtered results if active
     if (state.filtersActive[type]) {
@@ -1915,7 +1931,9 @@ body::after {
       showToast('Delete failed', 'error');
       // Restore on failure
       if (removed) {
-        state[list].unshift(removed);
+        if (removed.entry_date === todayStr()) state[list].unshift(removed);
+        const dateVal = $(type === 'expenses' ? 'expenseDate' : 'incomeDate').value || todayStr();
+        if (removed.entry_date === dateVal) state[dispList].unshift(removed);
         if (type === 'expenses') renderExpenseList();
         else renderIncomeList();
         updateHeader();
@@ -1936,10 +1954,16 @@ body::after {
     const noteField = type === 'expenses' ? 'note' : 'source_label';
 
     // Optimistic update
+    const dispList = type === 'expenses' ? 'displayedExpenses' : 'displayedIncome';
     const entry = state[list].find(e => e.id === id);
     if (entry) {
       entry.amount = newAmount;
       entry[noteField] = newNote || null;
+    }
+    const entryDisp = state[dispList].find(e => e.id === id);
+    if (entryDisp) {
+      entryDisp.amount = newAmount;
+      entryDisp[noteField] = newNote || null;
     }
 
     // Also update filtered list if applicable
@@ -2095,10 +2119,18 @@ body::after {
     // Submit expense
     $('btnLogExpense').addEventListener('click', addExpense);
     $('expenseAmount').addEventListener('keydown', (e) => { if (e.key === 'Enter') addExpense(); });
+    $('expenseDate').addEventListener('change', async () => {
+      await fetchTodayExpenses();
+      renderExpenseList();
+    });
 
     // Submit income
     $('btnLogIncome').addEventListener('click', addIncome);
     $('incomeAmount').addEventListener('keydown', (e) => { if (e.key === 'Enter') addIncome(); });
+    $('incomeDate').addEventListener('change', async () => {
+      await fetchTodayIncome();
+      renderIncomeList();
+    });
 
     // Delete handlers (delegation)
     document.addEventListener('click', (e) => {
