@@ -377,36 +377,7 @@ body::after {
   font-size: 1.1rem;
 }
 
-/* Category Pills */
-.category-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-.category-pill {
-  padding: 7px 14px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  border-radius: 50px;
-  font-family: var(--font-stack);
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.category-pill:hover { border-color: var(--accent-purple); color: var(--text-primary); }
-.category-pill.active {
-  background: linear-gradient(135deg, var(--accent-purple), rgba(139, 92, 246, 0.7));
-  border-color: transparent;
-  color: #fff;
-  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.25);
-}
-.category-pill .cat-icon { font-size: 0.9rem; }
+
 
 /* Submit Button */
 .btn-submit {
@@ -758,39 +729,7 @@ body::after {
   letter-spacing: 1px;
 }
 
-/* Category Breakdown Bars */
-.category-breakdown {
-  margin-bottom: 18px;
-}
-.category-bar-item {
-  margin-bottom: 10px;
-}
-.category-bar-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.78rem;
-  margin-bottom: 4px;
-}
-.category-bar-name {
-  color: var(--text-secondary);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.category-bar-amount { font-weight: 600; color: var(--text-primary); }
-.category-bar-track {
-  height: 8px;
-  background: var(--input-bg);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.category-bar-fill {
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, var(--accent-purple), var(--accent-teal));
-  transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
-}
+
 
 /* Day-by-day list */
 .day-row {
@@ -1017,8 +956,7 @@ body::after {
   .quick-log { padding: 14px; }
   .amount-input { font-size: 1.3rem; }
   .form-row { flex-direction: column; gap: 8px; }
-  .category-pills { gap: 4px; }
-  .category-pill { padding: 6px 10px; font-size: 0.72rem; }
+
   .month-total-value { font-size: 1.4rem; }
 }
 
@@ -1027,15 +965,7 @@ body::after {
   .app-header { padding: 16px 24px; }
 }
 
-/* Select styling */
-select.input-field {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3b4' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
+
   </style>
 </head>
 <body>
@@ -1096,15 +1026,7 @@ select.input-field {
       <section class="quick-log glass">
         <div class="quick-log-title">Log Expense</div>
         <input type="text" inputmode="decimal" class="input-field amount-input" id="expenseAmount" placeholder="₹ 0.00" autocomplete="off">
-        <div class="category-pills" id="categoryPills">
-          <button class="category-pill active" data-cat="Food"><span class="cat-icon">🍔</span> Food</button>
-          <button class="category-pill" data-cat="Transport"><span class="cat-icon">🚌</span> Transport</button>
-          <button class="category-pill" data-cat="Shopping"><span class="cat-icon">🛒</span> Shopping</button>
-          <button class="category-pill" data-cat="Bills"><span class="cat-icon">📄</span> Bills</button>
-          <button class="category-pill" data-cat="Medicine"><span class="cat-icon">💊</span> Medicine</button>
-          <button class="category-pill" data-cat="Entertainment"><span class="cat-icon">🎮</span> Entertainment</button>
-          <button class="category-pill" data-cat="Other"><span class="cat-icon">📦</span> Other</button>
-        </div>
+
         <div class="form-row">
           <div class="form-group">
             <label for="expenseNote">Note</label>
@@ -1144,19 +1066,6 @@ select.input-field {
             </div>
           </div>
           <div class="filter-row">
-            <div class="form-group">
-              <label for="expFilterCategory">Category</label>
-              <select class="input-field" id="expFilterCategory">
-                <option value="">All Categories</option>
-                <option value="Food">🍔 Food</option>
-                <option value="Transport">🚌 Transport</option>
-                <option value="Shopping">🛒 Shopping</option>
-                <option value="Bills">📄 Bills</option>
-                <option value="Medicine">💊 Medicine</option>
-                <option value="Entertainment">🎮 Entertainment</option>
-                <option value="Other">📦 Other</option>
-              </select>
-            </div>
             <div class="form-group">
               <label for="expFilterSearch">Search</label>
               <input type="text" class="input-field" id="expFilterSearch" placeholder="Search notes…">
@@ -1205,7 +1114,7 @@ select.input-field {
             <div class="month-total-label">Total Spent</div>
             <div class="month-total-value" id="expMonthTotal" style="color:var(--color-negative)">₹0</div>
           </div>
-          <div class="category-breakdown" id="expCategoryBreakdown"></div>
+
           <div id="expDayByDay"></div>
           <button class="btn-export" id="btnExportExpenses">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -1342,9 +1251,7 @@ select.input-field {
   'use strict';
 
   // ===== CONSTANTS =====
-  const CATEGORIES = ['Food','Transport','Shopping','Bills','Medicine','Entertainment','Other'];
-  const CAT_ICONS = { Food:'🍔', Transport:'🚌', Shopping:'🛒', Bills:'📄', Medicine:'💊', Entertainment:'🎮', Other:'📦' };
-  const CAT_COLORS = { Food:'#F59E0B', Transport:'#3B82F6', Shopping:'#EC4899', Bills:'#6366F1', Medicine:'#10B981', Entertainment:'#8B5CF6', Other:'#64748B' };
+
 
   // ===== SUPABASE INIT =====
   let supabase;
@@ -1639,7 +1546,7 @@ select.input-field {
       let query = supabase.from(table).select('*');
       if (filters.dateFrom) query = query.gte('entry_date', filters.dateFrom);
       if (filters.dateTo) query = query.lte('entry_date', filters.dateTo);
-      if (filters.category && type === 'expenses') query = query.eq('category', filters.category);
+
       if (filters.search) {
         const col = type === 'expenses' ? 'note' : 'source_label';
         query = query.ilike(col, `%${filters.search}%`);
@@ -1673,10 +1580,9 @@ select.input-field {
   }
 
   function renderExpenseItem(entry) {
-    const icon = CAT_ICONS[entry.category] || '📦';
     const isEditing = state.editingId === entry.id;
     return `<div class="entry-item${isEditing ? ' editing' : ''}" data-id="${entry.id}" data-type="expenses">
-      <div class="entry-icon" style="background:${CAT_COLORS[entry.category] || CAT_COLORS.Other}20">${icon}</div>
+      <div class="entry-icon" style="background:rgba(239,68,68,0.12)">💸</div>
       <div class="entry-details">
         ${isEditing ?
           `<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px">
@@ -1690,8 +1596,6 @@ select.input-field {
           `<div class="entry-amount" style="color:var(--color-negative)">${formatCurrency(entry.amount)}</div>
           ${entry.note ? `<div class="entry-note">${escHtml(entry.note)}</div>` : ''}
           <div class="entry-meta">
-            <span>${entry.category}</span>
-            <span>·</span>
             <span>${formatTime(entry.logged_at)}</span>
             ${entry.entry_date !== todayStr() ? `<span>· ${formatDate(entry.entry_date)}</span>` : ''}
           </div>`
@@ -1781,23 +1685,7 @@ select.input-field {
     const total = data.reduce((s, e) => s + Number(e.amount), 0);
     $('expMonthTotal').textContent = formatCurrency(total);
 
-    // Category breakdown
-    const cats = {};
-    data.forEach(e => { cats[e.category] = (cats[e.category] || 0) + Number(e.amount); });
-    const maxCat = Math.max(...Object.values(cats), 1);
-    const sorted = Object.entries(cats).sort((a, b) => b[1] - a[1]);
 
-    $('expCategoryBreakdown').innerHTML = sorted.map(([cat, amt]) => `
-      <div class="category-bar-item">
-        <div class="category-bar-header">
-          <span class="category-bar-name">${CAT_ICONS[cat] || '📦'} ${cat}</span>
-          <span class="category-bar-amount">${formatCurrency(amt)}</span>
-        </div>
-        <div class="category-bar-track">
-          <div class="category-bar-fill" style="width:${(amt / maxCat * 100).toFixed(1)}%;background:linear-gradient(90deg,${CAT_COLORS[cat] || CAT_COLORS.Other},${CAT_COLORS[cat] || CAT_COLORS.Other}88)"></div>
-        </div>
-      </div>
-    `).join('');
 
     // Day-by-day
     renderDayByDay('expDayByDay', data, 'expenses');
@@ -1846,7 +1734,7 @@ select.input-field {
         </div>
         <div class="day-row-entries">
           ${entries.map(e => `<div class="day-entry">
-            <span>${type === 'expenses' ? (CAT_ICONS[e.category] || '') + ' ' + (e.note || e.category) : (e.source_label || 'Income')} · ${formatTime(e.logged_at)}</span>
+            <span>${type === 'expenses' ? (e.note || 'Expense') : (e.source_label || 'Income')} · ${formatTime(e.logged_at)}</span>
             <span class="day-entry-amount">${formatCurrency(e.amount)}</span>
           </div>`).join('')}
         </div>
@@ -1859,8 +1747,8 @@ select.input-field {
     if (!data || data.length === 0) { showToast('No data to export', 'error'); return; }
     let csv;
     if (type === 'expenses') {
-      csv = 'Date,Amount,Category,Note,Logged At\n';
-      csv += data.map(e => `${e.entry_date},${e.amount},"${e.category}","${(e.note || '').replace(/"/g, '""')}",${e.logged_at}`).join('\n');
+      csv = 'Date,Amount,Note,Logged At\n';
+      csv += data.map(e => `${e.entry_date},${e.amount},"${(e.note || '').replace(/"/g, '""')}",${e.logged_at}`).join('\n');
     } else {
       csv = 'Date,Amount,Source,Logged At\n';
       csv += data.map(e => `${e.entry_date},${e.amount},"${(e.source_label || '').replace(/"/g, '""')}",${e.logged_at}`).join('\n');
@@ -1880,15 +1768,12 @@ select.input-field {
     const amountVal = parseAmount($('expenseAmount').value);
     if (!amountVal) { showToast('Enter a valid amount', 'error'); return; }
 
-    const activePill = document.querySelector('.category-pill.active');
-    const category = activePill ? activePill.dataset.cat : 'Other';
     const note = $('expenseNote').value.trim();
     const entryDate = $('expenseDate').value || todayStr();
 
     const entry = {
       id: generateId(),
       amount: amountVal,
-      category,
       note: note || null,
       entry_date: entryDate,
       logged_at: new Date().toISOString()
@@ -1916,7 +1801,6 @@ select.input-field {
       const { error } = await supabase.from('expenses').insert({
         id: entry.id,
         amount: entry.amount,
-        category: entry.category,
         note: entry.note,
         entry_date: entry.entry_date
       });
@@ -2114,15 +1998,14 @@ select.input-field {
   async function applyExpenseFilters() {
     const dateFrom = $('expFilterDateFrom').value;
     const dateTo = $('expFilterDateTo').value;
-    const category = $('expFilterCategory').value;
     const search = $('expFilterSearch').value.trim();
 
-    if (!dateFrom && !dateTo && !category && !search) {
+    if (!dateFrom && !dateTo && !search) {
       clearExpenseFilters();
       return;
     }
 
-    const filters = { dateFrom, dateTo, category, search };
+    const filters = { dateFrom, dateTo, search };
     state.filteredExpenses = await fetchFilteredData('expenses', filters);
     state.filtersActive.expenses = true;
 
@@ -2135,7 +2018,6 @@ select.input-field {
   function clearExpenseFilters() {
     $('expFilterDateFrom').value = '';
     $('expFilterDateTo').value = '';
-    $('expFilterCategory').value = '';
     $('expFilterSearch').value = '';
     state.filteredExpenses = null;
     state.filtersActive.expenses = false;
@@ -2204,13 +2086,7 @@ select.input-field {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
-    // Category pills
-    $('categoryPills').addEventListener('click', (e) => {
-      const pill = e.target.closest('.category-pill');
-      if (!pill) return;
-      document.querySelectorAll('.category-pill').forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-    });
+
 
     // Submit expense
     $('btnLogExpense').addEventListener('click', addExpense);
