@@ -1242,7 +1242,11 @@ body::after {
 
   <!-- Supabase SDK + Config -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script src="config.js"></script>
+  <script>
+    // LOG BOOK — Supabase Configuration (inlined for deployment)
+    const SUPABASE_URL = 'https://svllksfnklrxiikyylos.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN2bGxrc2Zua2xyeGlpa3l5bG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE4OTAwMjksImV4cCI6MjA5NzQ2NjAyOX0.qS7bprV-VdTiGMC1j95h_aYdWEWYsCQN_vsdJjmEncY';
+  </script>
   <script>
 /* ============================================
    LOG BOOK — Application Logic
